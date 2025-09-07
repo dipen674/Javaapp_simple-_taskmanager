@@ -1,0 +1,13 @@
+/home/vagrant/java_app/new-taskmanager/src/main/java/com/example/taskmanager/controller/DashboardServlet.java
+/home/vagrant/java_app/new-taskmanager/src/main/java/com/example/taskmanager/controller/TaskServlet.java
+/home/vagrant/java_app/new-taskmanager/src/main/java/com/example/taskmanager/service/CategoryService.java
+/home/vagrant/java_app/new-taskmanager/src/main/java/com/example/taskmanager/service/TaskService.java
+/home/vagrant/java_app/new-taskmanager/src/main/java/com/example/taskmanager/model/Task.java
+/home/vagrant/java_app/new-taskmanager/src/main/java/com/example/taskmanager/controller/RegisterServlet.java
+/home/vagrant/java_app/new-taskmanager/src/main/java/com/example/taskmanager/service/UserService.java
+/home/vagrant/java_app/new-taskmanager/src/main/java/com/example/taskmanager/model/Category.java
+/home/vagrant/java_app/new-taskmanager/src/main/java/com/example/taskmanager/controller/LogoutServlet.java
+/home/vagrant/java_app/new-taskmanager/src/main/java/com/example/taskmanager/controller/LoginServlet.java
+/home/vagrant/java_app/new-taskmanager/src/main/java/com/example/taskmanager/model/User.java
+/home/vagrant/java_app/new-taskmanager/src/main/java/com/example/taskmanager/controller/ProfileServlet.java
+/home/vagrant/java_app/new-taskmanager/src/main/java/com/example/taskmanager/controller/CategoryServlet.java
