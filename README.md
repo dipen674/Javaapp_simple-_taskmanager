@@ -61,7 +61,7 @@ The application follows the MVC (Model-View-Controller) pattern:
 ### Architecture Diagram
 
 <div align="center">
-  <img src="architecture.png" alt="Task Manager Application Architecture" width="800"/>
+  <img src="architecture_diagram.png" alt="Task Manager Application Architecture" width="800"/>
 </div>
 
 **Component Description:**
