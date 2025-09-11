@@ -9,105 +9,138 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f8f9fa;
+            background: linear-gradient(135deg, #a2d9ff 0%, #6faedb 100%);
             color: #333;
+            min-height: 100vh;
         }
+
+        /* Navbar */
+        .navbar {
+            background: linear-gradient(135deg, #6faedb 0%, #4f8ec4 100%);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        .navbar h1 {
+            margin: 0;
+            font-size: 1.8rem;
+        }
+        .navbar a {
+            color: white;
+            margin: 0 10px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+        .navbar a:hover {
+            opacity: 0.85;
+        }
+
         .container {
-            max-width: 1000px;
-            margin: 0 auto;
+            max-width: 800px;
+            margin: 2rem auto;
             padding: 20px;
         }
+
         header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px 0;
+            background: #f9fbfd;
+            color: #2b4a66;
+            padding: 20px;
             text-align: center;
-            border-radius: 8px 8px 0 0;
-            margin-bottom: 20px;
+            border-radius: 12px 12px 0 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
-        h1 {
+        header h1 {
             margin: 0;
         }
-        .nav {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin: 20px 0;
-            flex-wrap: wrap;
+        header p {
+            margin: 0.5rem 0 0 0;
+            font-size: 0.95rem;
+            color: #555;
         }
-        .btn {
-            padding: 12px 25px;
-            background: #667eea;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: all 0.3s;
-            border: none;
-            cursor: pointer;
-            font-size: 1em;
-        }
-        .btn:hover {
-            background: #5a67d8;
-            transform: translateY(-2px);
-        }
+
         .profile-content {
             background: white;
             padding: 30px;
-            border-radius: 0 0 8px 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
         }
-        .form-group {
+        .profile-content h2 {
+            color: #2b4a66;
             margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
         }
         .form-group label {
             display: block;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.4rem;
             font-weight: 500;
         }
         .form-group input {
             width: 100%;
             padding: 0.75rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            border: 1px solid #ccd9e6;
+            border-radius: 6px;
             font-size: 1rem;
         }
+
         .error-message {
             background-color: #f8d7da;
             color: #721c24;
             padding: 0.75rem;
-            border-radius: 4px;
+            border-radius: 6px;
             margin-bottom: 1rem;
         }
         .success-message {
             background-color: #d4edda;
             color: #155724;
             padding: 0.75rem;
-            border-radius: 4px;
+            border-radius: 6px;
             margin-bottom: 1rem;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            background: #4f8ec4;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95em;
+            display: block;
+            width: 100%;
+            text-align: center;
+            margin-top: 10px;
+        }
+        .btn:hover {
+            background: #3b739f;
+            transform: translateY(-2px);
         }
     </style>
 </head>
 <body>
-   <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1rem; text-align: center;">
-    <h1>Task Manager</h1>
-    <div>
-        <a href="dashboard" style="color: white; margin: 0 10px; text-decoration: none;">Dashboard</a>
-        <a href="tasks" style="color: white; margin: 0 10px; text-decoration: none;">My Tasks</a>
-        <a href="profile" style="color: white; margin: 0 10px; text-decoration: none;">Profile</a>
-        <a href="logout" style="color: white; margin: 0 10px; text-decoration: none;">Logout</a>
-    </div>
-</div> 
+    <!-- Navbar -->
+    <div class="navbar">
+        <h1>Task Manager</h1>
+        <div>
+            <a href="dashboard">Dashboard</a>
+            <a href="tasks">My Tasks</a>
+            <a href="profile">Profile</a>
+            <a href="logout">Logout</a>
+        </div>
+    </div> 
+
     <div class="container">
         <header>
             <h1>User Profile</h1>
             <p>Manage your account settings</p>
         </header>
-        
-        <div class="nav">
-            <a href="dashboard" class="btn">Dashboard</a>
-            <a href="tasks" class="btn">My Tasks</a>
-            <a href="logout" class="btn">Logout</a>
-        </div>
         
         <div class="profile-content">
             <h2>Change Password</h2>
