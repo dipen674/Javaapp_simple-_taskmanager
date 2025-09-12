@@ -3,4 +3,4 @@
   hosts: deploy_VM
   become: yes
   roles:
-    - role: app_deployer
+    - role: deploy

@@ -40,7 +40,7 @@ pipeline {
                 echo "pushing image"
                 withDockerRegistry ([credentialsId: 'jenkinsdockercred', url: '']) {
                     sh '''
-                    docker push $mydockerimage:$BUILD_NUMBER
+                    docker push $image:$BUILD_NUMBER
                     '''
                 }
             }
@@ -62,7 +62,7 @@ pipeline {
                             source /home/vagrant/myenv/bin/activate
                             cd /home/vagrant/project/ansible &&
                             ansible-galaxy collection install community.docker
-                            ansible-playbook playbook.yaml -i inventory -e "build_number=${BUILD_NUMBER}"
+                            ansible-playbook playbook.yaml -e "build_number=${BUILD_NUMBER}"
                         '
                         """
                 }
@@ -70,40 +70,40 @@ pipeline {
         }
         
     }
-    post {
-         always { 
-            mail to: 'animeislove1657@gmail.com',
-            subject: "Job '${JOB_NAME}' (${BUILD_NUMBER}) is waiting for input",
-            body: "Please go to ${BUILD_URL} and verify the build"
-            cleanWs()
-        }
-        success {
-            mail bcc: 'dipakbhatt363@gmail.com', 
-            body: """Hi Team,
-            Build #$BUILD_NUMBER is successful, please go through the url
-            $BUILD_URL
-            and verify the details.
-            Regards,
-            DevOps Team""",
-            cc: 'bhattad625@gmail.com', 
-            from: 'bhattad625@gmail.com', 
-            replyTo: '', 
-            subject: 'BUILD SUCCESS NOTIFICATION', 
-            to: 'bhattadeependra05@gmail.com'
-        }
-        failure {
-            mail bcc: '', 
-            body: """Hi Team,
-            Build #$BUILD_NUMBER is unsuccessful, please go through the url
-            $BUILD_URL
-            and verify the details.
-            Regards,
-            DevOps Team""", 
-            cc: 'dipakbhatt363@gmail.com', 
-            from: 'bhattad625@gmail.com', 
-            replyTo: 'bhattadeependra05@gmail.com', 
-            subject: 'BUILD FAILED NOTIFICATION', 
-            to: 'bhattadeependra05@gmail.com'
-        }
-    }
+//     post {
+//          always { 
+//             mail to: 'animeislove1657@gmail.com',
+//             subject: "Job '${JOB_NAME}' (${BUILD_NUMBER}) is waiting for input",
+//             body: "Please go to ${BUILD_URL} and verify the build"
+//             cleanWs()
+//         }
+//         success {
+//             mail bcc: 'dipakbhatt363@gmail.com', 
+//             body: """Hi Team,
+//             Build #$BUILD_NUMBER is successful, please go through the url
+//             $BUILD_URL
+//             and verify the details.
+//             Regards,
+//             DevOps Team""",
+//             cc: 'bhattad625@gmail.com', 
+//             from: 'bhattad625@gmail.com', 
+//             replyTo: '', 
+//             subject: 'BUILD SUCCESS NOTIFICATION', 
+//             to: 'bhattadeependra05@gmail.com'
+//         }
+//         failure {
+//             mail bcc: '', 
+//             body: """Hi Team,
+//             Build #$BUILD_NUMBER is unsuccessful, please go through the url
+//             $BUILD_URL
+//             and verify the details.
+//             Regards,
+//             DevOps Team""", 
+//             cc: 'dipakbhatt363@gmail.com', 
+//             from: 'bhattad625@gmail.com', 
+//             replyTo: 'bhattadeependra05@gmail.com', 
+//             subject: 'BUILD FAILED NOTIFICATION', 
+//             to: 'bhattadeependra05@gmail.com'
+//         }
+//     }
 }
