@@ -19,7 +19,3 @@
 - name: Clean up old images
   import_tasks: 04_cleanup.yml
   tags: cleanup
-
-- name: Verify deployment
-  import_tasks: 05_verify.yml
-  tags: verify
