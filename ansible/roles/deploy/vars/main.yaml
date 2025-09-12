@@ -1,16 +1,6 @@
 ---
 # Default variables (can be overridden)
-workspace: "/opt/app"
+workspace: "/homw/vagrant/deploy_app"
 IMAGE: "deependrabhatta/java_app:{{ build_number }}"
-compose_file: ".env"
-docker_file: "compose.yaml"
-
-
-# docker_registry: "harbor.registry.local"
-# project_namespace: "jenkins"
-# image_name: "mylocalimage"
-
-
-# Computing Image tags
-# IMAGE: "{{image}}:{{ build_number }}"
-# backend_image: "{{ docker_registry }}/{{ project_namespace }}/{{ image_name }}:backend_{{ build_number }}"
+compose_file: "compose.yaml"
+env_file: ".env"
