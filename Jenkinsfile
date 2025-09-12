@@ -69,13 +69,12 @@ pipeline {
                 ]) {
                     sh """
                     ssh -i "/var/lib/jenkins/keys/id_rsa" -o StrictHostKeyChecking=no vagrant@192.168.56.210 '
-                        rm -rf /home/vagrant/java
+                        rm -rf /home/vagrant/java || true
                         mkdir -p /home/vagrant/java
-                        git clone --single-branch --branch develop \
+                        git clone --single-branch --branch jenkins \
                             https://github.com/dipen674/Simple_Java_TM.git /home/vagrant/java
                         source /home/vagrant/myenv/bin/activate
                         cd /home/vagrant/java &&
-                        echo "IMAGE=${image}:${BUILD_NUMBER}" > .env
                         ansible-galaxy collection install community.docker
                         cd ansible &&
                         ansible-playbook playbook.yaml -e "build_number=${BUILD_NUMBER}"
