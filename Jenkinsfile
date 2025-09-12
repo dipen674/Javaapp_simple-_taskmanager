@@ -38,7 +38,10 @@ pipeline {
             agent {label "production"}
             steps {
                 echo "pushing image"
-                withDockerRegistry ([credentialsId: 'jenkinsdockercred', url: '']) {
+                withDockerRegistry ([credentialsId: 'jenkinsdockercred',
+                  usernameVariable: 'DOCKER_USER',
+                  passwordVariable: 'DOCKER_PASS'
+                  url: '']) {
                     sh '''
                     docker push $image:$BUILD_NUMBER
                     '''
@@ -58,11 +61,13 @@ pipeline {
                             rm -rf /home/vagrant/java
                             mkdir -p /home/vagrant/java
                             git clone --single-branch --branch develop \\
-                                https://github.com/dipen674/Simple_Java_TM.git /home/vagrant/project
+                                https://github.com/dipen674/Simple_Java_TM.git /home/vagrant/java
                             source /home/vagrant/myenv/bin/activate
-                            cd /home/vagrant/project/ansible &&
+                            cd /home/vagrant/java/ansible &&
                             ansible-galaxy collection install community.docker
-                            ansible-playbook playbook.yaml -e "build_number=${BUILD_NUMBER}"
+                            ansible-playbook playbook.yaml  -e "build_number=${BUILD_NUMBER}" \
+                                -e "docker_username=$DOCKER_USER" \
+                                -e "docker_password=$DOCKER_PASS"
                         '
                         """
                 }
