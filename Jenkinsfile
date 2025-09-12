@@ -1,5 +1,10 @@
 pipeline {
-    agent any
+    agent none
+
+    triggers {
+        // Trigger on push to 'jenkins' branch
+        githubPush()
+    }
 
     environment {
         image = "deependrabhatta/java_app"
