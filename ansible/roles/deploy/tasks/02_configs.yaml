@@ -9,6 +9,11 @@
     src: "/home/vagrant/java/wait-for-it.sh"
     dest: "{{ workspace }}/{{ wait }}"
 
+- name: Copy wait-for-it.sh
+  ansible.builtin.copy:
+    src: "/home/vagrant/java/init.sql"
+    dest: "{{ workspace }}/{{ sql }}"
+
 
 - name: Create environment file
   ansible.builtin.template:
