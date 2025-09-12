@@ -3,3 +3,9 @@
   ansible.builtin.copy:
     src: "/home/vagrant/java/docker-compose.yml"
     dest: "{{ workspace }}/{{ compose_file }}"
+
+
+- name: Create environment file
+  ansible.builtin.template:
+    src: ".env.j2"
+    dest: "{{ workspace }}/{{ env_file }}"
