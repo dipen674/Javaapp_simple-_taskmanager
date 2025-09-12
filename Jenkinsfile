@@ -40,7 +40,6 @@ pipeline {
             agent {label "production"}
             steps {
                 echo "pushing image"
-                // CORRECTED: Use withCredentials instead of withDockerRegistry
                 withCredentials([usernamePassword(
                     credentialsId: 'jenkinsdockercred',
                     usernameVariable: 'DOCKER_USER',
@@ -48,7 +47,7 @@ pipeline {
                 )]) {
                     sh '''
                     docker login -u $DOCKER_USER -p $DOCKER_PASS
-                    docker push $image:$BUILD_NUMBER
+                    docker push ${image}:${BUILD_NUMBER}
                     '''
                 }
             }
@@ -61,11 +60,6 @@ pipeline {
                     sshUserPrivateKey(
                         credentialsId: 'ansible-ssh-key',
                         keyFileVariable: 'ANSIBLE_KEY'
-                    ),
-                    usernamePassword(
-                        credentialsId: 'jenkinsdockercred',
-                        usernameVariable: 'DOCKER_USER',
-                        passwordVariable: 'DOCKER_PASS'
                     )
                 ]) {
                     sh """
@@ -75,12 +69,11 @@ pipeline {
                         git clone --single-branch --branch develop \
                             https://github.com/dipen674/Simple_Java_TM.git /home/vagrant/java
                         source /home/vagrant/myenv/bin/activate
-                        cd /home/vagrant/java/ansible &&
-                        ansible-galaxy collection install community.docker &&
-                        ansible-playbook playbook.yaml \
-                          -e "build_number=${BUILD_NUMBER}" \
-                          -e "docker_username=$DOCKER_USER" \
-                          -e "docker_password=$DOCKER_PASS"
+                        cd /home/vagrant/java &&
+                        echo "IMAGE=${image}:${BUILD_NUMBER}" > .env
+                        ansible-galaxy collection install community.docker
+                        cd ansible &&
+                        ansible-playbook playbook.yaml -e "build_number=${BUILD_NUMBER}"
                     '
                     """
                 }

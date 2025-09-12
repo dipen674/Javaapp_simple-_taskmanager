@@ -1,9 +1,4 @@
 ---
-- name: Login to Docker registry
-  ansible.builtin.command: >
-    docker login -u {{ docker_username }}
-                 -p {{ docker_password }}
-
 - name: Pull latest images
   ansible.builtin.command: "docker image pull {{ IMAGE }}"
   args:
