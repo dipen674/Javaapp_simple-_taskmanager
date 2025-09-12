@@ -1,15 +1,15 @@
 # SPDX-License-Identifier: MIT-0
 ---
 - name: Prepare deployment workspace
-  import_tasks: 01_setup.yml
+  import_tasks: 01_setup.yaml
   tags: setup
 
 - name: Copy compose file
-  import_tasks: 02_configs.yml
+  import_tasks: 02_configs.yaml
   tags: configs
 
 - name: Deploy containers
-  import_tasks: 03_deploy.yml
+  import_tasks: 03_deploy.yaml
   tags: deploy
 
 - name: Debug build number
@@ -17,5 +17,5 @@
     msg: "Build number is {{ build_number }}"
 
 - name: Clean up old images
-  import_tasks: 04_cleanup.yml
+  import_tasks: 04_cleanup.yaml
   tags: cleanup
