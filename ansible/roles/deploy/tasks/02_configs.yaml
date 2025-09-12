@@ -1,5 +1,5 @@
 ---
 - name: Copy Docker compose file
   ansible.builtin.copy:
-    src: "/home/vagrant/project/docker-compose.yml"
+    src: "/home/vagrant/java/docker-compose.yml"
     dest: "{{ workspace }}/{{ compose_file }}"
