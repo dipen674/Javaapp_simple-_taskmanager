@@ -40,7 +40,7 @@ pipeline {
                 echo "pushing image"
                 withDockerRegistry ([credentialsId: 'jenkinsdockercred',
                   usernameVariable: 'DOCKER_USER',
-                  passwordVariable: 'DOCKER_PASS'
+                  passwordVariable: 'DOCKER_PASS',
                   url: '']) {
                     sh '''
                     docker push $image:$BUILD_NUMBER
