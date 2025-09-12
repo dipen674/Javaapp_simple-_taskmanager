@@ -1,16 +1,5 @@
 # Task Manager Web Application
 
-A comprehensive, Dockerized task management web application built with Java Servlets, JSP, and MySQL. This application helps users organize their tasks with categories, priorities, and due dates.
-
-## 🚀 Features
-
-- **User Authentication**: Secure register, login, and logout functionality
-- **Task Management**: Full CRUD operations for tasks
-- **Categories**: Organize tasks with customizable categories and colors
-- **Dashboard**: Overview of task statistics and recent activities
-- **Responsive Design**: Modern UI that works on desktop and mobile devices
-- **Database Persistence**: MySQL database for reliable data storage
-
 ## 🛠️ Technology Stack
 
 - **Backend**: Java Servlets, JSP
@@ -19,362 +8,256 @@ A comprehensive, Dockerized task management web application built with Java Serv
 - **Containerization**: Docker, Docker Compose
 - **Web Server**: Apache Tomcat
 - **Build Tool**: Maven
+- **CI/CD**: Jenkins Pipeline
+- **Configuration Management**: Ansible
+
+## 🏗️ Architecture
+
+The application follows a distributed architecture with separate VMs for different concerns:
+
+- **Jenkins VM**: CI/CD pipeline execution
+- **Ansible VM**: Configuration management and deployment orchestration
+- **Production VM**: Application deployment target
+- **Development VM**: Build and testing environment
+
+### Application Structure
+
+The application follows the MVC (Model-View-Controller) pattern:
+
+- **Model**: Data models and database entities (`User`, `Task`, `Category`)
+- **View**: JSP pages for user interface
+- **Controller**: Servlets handling HTTP requests and responses
+- **Service Layer**: Business logic and data processing
 
 ## 📁 Project Structure
 
 ```
 taskmanager-webapp/
-├── src/
-│   └── main/
-│       ├── java/
-│       │   └── com/example/taskmanager/
-│       │       ├── controller/          # Servlets
-│       │       ├── model/               # Data models
-│       │       ├── service/             # Business logic
-│       │       └── util/                # Utility classes
-│       ├── resources/
-│       └── webapp/
-│           ├── css/
-│           │   └── style.css            # Main stylesheet
-│           ├── WEB-INF/
-│           │   ├── views/               # JSP pages
-│           │   └── web.xml              # Deployment descriptor
-│           ├── META-INF/
-│           │   └── context.xml          # Database configuration
-│           └── index.jsp                # Home page
-├── target/                              # Compiled output
-├── docker-compose.yml                   # Multi-container setup
-├── Dockerfile                           # App container definition
-├── init.sql                             # Database initialization
-├── pom.xml                              # Maven configuration
-└── wait-for-it.sh                       # Database readiness script
+├── src/main/
+│   ├── java/com/example/taskmanager/
+│   │   ├── controller/          # Servlets
+│   │   ├── model/               # Data models
+│   │   ├── service/             # Business logic
+│   │   └── util/                # Utility classes
+│   └── webapp/
+│       ├── css/style.css        # Styling
+│       ├── js/script.js         # Client-side logic
+│       ├── WEB-INF/views/       # JSP pages
+│       └── META-INF/context.xml # Database configuration
+├── ansible/                     # Ansible deployment configuration
+│   ├── playbook.yaml
+│   └── roles/deploy/
+├── docker-compose.yml           # Multi-container setup
+├── Dockerfile                   # Application container
+├── Jenkinsfile                  # CI/CD pipeline
+├── init.sql                     # Database schema
+└── pom.xml                      # Maven configuration
 ```
 
-## 🏗️ Application Architecture
+## 🚀 How It Works
 
-The application follows the MVC (Model-View-Controller) pattern:
+### Infrastructure Setup
 
-- **Model**: Data models and database entities
-- **View**: JSP pages for user interface
-- **Controller**: Servlets handling HTTP requests and responses
+The application operates across **4 separate VMs**:
 
-### Architecture Diagram
+1. **Jenkins VM** (192.168.56.xxx): CI/CD orchestration
+2. **Ansible VM** (192.168.56.210): Configuration management
+3. **Production VM** (192.168.56.xxx): Application deployment target
+4. **Development VM**: Build and compilation environment
 
-<div align="center">
-  <img src="architecture_diagram.png" alt="Task Manager Application Architecture" width="800"/>
-</div>
+### Setup Requirements
 
-**Component Description:**
-
-- **Web Browser**: User interface access point
-- **Tomcat Server**: Java web server handling HTTP requests  
-- **Frontend Layer**: JSP pages, CSS styling, JavaScript interactions, and JSTL tags
-- **Java Servlets**: Controller layer handling HTTP requests and responses
-- **Service Layer**: Business logic and data processing
-- **Data Models**: Entity classes representing database structure
-- **MySQL Database**: Persistent data storage with users, tasks, and categories tables
-
-## ⚠️ Important: Servlet API Compatibility
-
-### The Problem
-
-This application may encounter **404 errors** due to Servlet API version conflicts between different Tomcat versions:
-
-- **Tomcat 10+**: Uses **Jakarta Servlet API** (package: `jakarta.servlet`)
-- **Tomcat 9 and below**: Uses **Java EE Servlet API** (package: `javax.servlet`)
-
-### How to Identify Which API to Use
-
-1. **Check your Tomcat version**:
-   ```bash
-   # In your Tomcat directory
-   ./bin/version.sh  # Linux/Mac
-   version.bat       # Windows
-   ```
-
-2. **Version mapping**:
-   - **Tomcat 11.x**: Jakarta Servlet API 6.0+ (`jakarta.servlet`)
-   - **Tomcat 10.x**: Jakarta Servlet API 5.0+ (`jakarta.servlet`)
-   - **Tomcat 9.x and below**: Java EE Servlet API (`javax.servlet`)
-
-3. **Check your current code**:
-   ```java
-   // If you see this - it's Java EE (old)
-   import javax.servlet.*;
-   import javax.servlet.http.*;
-   
-   // If you see this - it's Jakarta EE (new)
-   import jakarta.servlet.*;
-   import jakarta.servlet.http.*;
-   ```
-
-### Solutions
-
-#### Solution 1: Update Code to Jakarta EE (Recommended for Tomcat 10+)
-
-**For Tomcat 11.x users**, update your servlet imports:
-
-```java
-// OLD (Java EE)
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.annotation.*;
-
-// NEW (Jakarta EE)
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
-import jakarta.servlet.annotation.*;
+#### 1. Jenkins VM Setup
+```bash
+# Install Jenkins, Docker, Maven, Trivy
+# Configure Jenkins with required plugins
+# Set up SSH keys for Ansible VM communication
+# Add DockerHub credentials (jenkinsdockercred)
+# Add SSH private key credential (ansible-ssh-key)
 ```
 
-**Update Maven dependencies** in `pom.xml`:
-
-```xml
-<dependencies>
-    <!-- Jakarta Servlet API (for Tomcat 10+) -->
-    <dependency>
-        <groupId>jakarta.servlet</groupId>
-        <artifactId>jakarta.servlet-api</artifactId>
-        <version>6.0.0</version>
-        <scope>provided</scope>
-    </dependency>
-    
-    <!-- Jakarta JSP API -->
-    <dependency>
-        <groupId>jakarta.servlet.jsp</groupId>
-        <artifactId>jakarta.servlet.jsp-api</artifactId>
-        <version>3.1.0</version>
-        <scope>provided</scope>
-    </dependency>
-    
-    <!-- JSTL for Jakarta -->
-    <dependency>
-        <groupId>jakarta.servlet.jsp.jstl</groupId>
-        <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
-        <version>3.0.0</version>
-    </dependency>
-</dependencies>
+#### 2. Ansible VM Setup
+```bash
+# Install Ansible and Docker
+# Create Python virtual environment at /home/vagrant/myenv/
+# Configure SSH access to Production VM
+# Install community.docker collection
 ```
 
-#### Solution 2: Use Tomcat 9.x (Java EE Compatible)
-
-If you prefer to keep the current code structure, use Tomcat 9.x:
-
-**Update Docker Compose** (`docker-compose.yml`):
-
-```yaml
-services:
-  app:
-    build: .
-    ports:
-      - "8080:8080"
-    depends_on:
-      - db
-    environment:
-      - CATALINA_OPTS=-Dfile.encoding=UTF-8
-    # Use Tomcat 9 base image in Dockerfile
+#### 3. Production VM Setup
+```bash
+# Install Docker and Docker Compose
+# Configure firewall for port 8080, 3306
+# Set up SSH access for Ansible VM
 ```
 
-**Update Dockerfile**:
+## 🔄 Pipeline Workflow
 
-```dockerfile
-FROM tomcat:9.0-jdk11
-# Rest of your configuration...
+### Trigger: Push to 'jenkins' branch
+
+```mermaid
+graph TD
+    A[Developer pushes to jenkins branch] --> B[Jenkins Pipeline Triggered]
+    B --> C[Stage 1: Code Compilation on Production VM]
+    C --> D[Stage 2: Docker Image Build]
+    D --> E[Stage 3: Security Scanning with Trivy]
+    E --> F[Stage 4: Push Image to DockerHub]
+    F --> G[Stage 5: SSH to Ansible VM]
+    G --> H[Ansible clones latest code]
+    H --> I[Ansible runs playbook on Production VM]
+    I --> J[Docker Compose deployment]
+    J --> K[Application running on Production VM]
 ```
 
-## 🚀 Quick Start
+## 🔄 Pipeline Workflow
 
-### Prerequisites
+### Comprehensive CI/CD Pipeline Execution
 
-- Docker and Docker Compose
-- Java JDK 11 or higher (for local development)
-- Maven (for local development)
+The pipeline operates through **5 distinct stages** across multiple VMs, each serving a specific purpose in the deployment lifecycle:
 
-### Docker Setup (Recommended)
+#### Stage 1: Code Compilation (Production VM Agent)
+```bash
+Agent: production
+Purpose: Build application artifacts
+```
+- **Maven Execution**: `mvn clean package` compiles Java servlets, JSPs, and creates deployable WAR
+- **Dependency Resolution**: Downloads required libraries (Servlet API, MySQL connector, JSTL)
+- **Test Execution**: Runs unit tests to ensure code quality
+- **Artifact Creation**: Generates `taskmanager-webapp.war` ready for containerization
+- **Archive Success**: Jenkins stores WAR file for potential rollbacks and audit trails
 
-1. **Clone the repository**:
-   ```bash
-   git clone <repository-url>
-   cd taskmanager-webapp
-   ```
+#### Stage 2: Docker Image Building (Production VM Agent)
+```bash
+Command: docker image build -t ${image}:${BUILD_NUMBER} .
+Dynamic Tagging: deependrabhatta/java_app:123 (where 123 = Jenkins BUILD_NUMBER)
+```
+- **Dockerfile Processing**: Uses Tomcat base image, copies WAR file, configures environment
+- **Layer Optimization**: Docker builds efficient layers for faster subsequent builds
+- **Build Context**: Includes application files, configuration, and startup scripts
+- **Tag Strategy**: Each build gets unique tag for version tracking and rollback capability
 
-2. **Choose your approach**:
-   - **For Tomcat 11**: Update code to Jakarta EE (see above)
-   - **For compatibility**: Use Tomcat 9 Docker image
+#### Stage 3: Security Vulnerability Scanning (Production VM Agent)
+```bash
+Tool: Trivy Scanner
+Command: trivy image ${image}:${BUILD_NUMBER}
+```
+- **Vulnerability Database**: Scans against latest CVE database
+- **OS Package Scanning**: Checks base Tomcat image for security issues
+- **Application Dependencies**: Analyzes Java libraries for known vulnerabilities
+- **Report Generation**: Provides detailed security assessment before deployment
+- **Gate Quality**: Pipeline can be configured to fail on high-severity vulnerabilities
 
-3. **Build the application**:
-   ```bash
-   mvn clean package
-   ```
+#### Stage 4: Image Registry Deployment (Production VM Agent)
+```bash
+Registry: DockerHub
+Authentication: Jenkins stored credentials (jenkinsdockercred)
+```
+- **Credential Management**: Secure login using Jenkins credential store
+- **Image Push**: `docker push ${image}:${BUILD_NUMBER}` uploads to public/private registry
+- **Registry Verification**: Confirms successful upload and availability
+- **Tag Management**: Maintains version history for rollback scenarios
 
-4. **Start the application**:
-   ```bash
-   docker-compose up --build
-   ```
+#### Stage 5: Ansible Deployment Orchestration (Master Node)
+```bash
+Target: Ansible VM (192.168.56.210)
+Method: SSH with private key authentication
+```
+- **SSH Connection**: Jenkins master connects to Ansible VM using stored SSH key
+- **Environment Preparation**: Cleans previous deployment workspace, clones fresh code
+- **Python Environment**: Activates virtual environment with Ansible dependencies
+- **Collection Installation**: `ansible-galaxy collection install community.docker`
+- **Playbook Execution**: `ansible-playbook playbook.yaml -e "build_number=${BUILD_NUMBER}"`
 
-5. **Access the application**:
-   - URL: http://localhost:8080
-   - Default credentials:
-     - Username: `admin`
-     - Password: `password`
+## 🔗 Connection Flow
 
-### Manual Setup (Without Docker)
+### Detailed Inter-VM Communication and Data Flow
 
-1. **Set up MySQL database**:
-   ```bash
-   mysql -u root -p < init.sql
-   ```
+#### Step 1: Development Trigger
+```
+Developer Workstation → GitHub Repository (jenkins branch)
+- Git push triggers GitHub webhook
+- Webhook payload includes commit information and branch details
+```
 
-2. **Configure database connection**:
-   Update `src/main/webapp/META-INF/context.xml` with your database credentials
+#### Step 2: Jenkins Orchestration
+```
+GitHub Webhook → Jenkins VM → Production VM (labeled "production")
+- Jenkins receives webhook, validates branch = 'jenkins'
+- Pipeline allocates build executor on Production VM agent
+- Agent establishes connection for build execution
+```
 
-3. **Build the application**:
-   ```bash
-   mvn clean package
-   ```
+#### Step 3: Build Execution Flow
+```
+Jenkins Master → Production VM Agent:
+1. Source Code Checkout (Git clone from repository)
+2. Maven Build Process (compile, test, package)
+3. Docker Operations (build, tag, scan, push)
+4. Artifact Archival (store WAR files in Jenkins)
+```
 
-4. **Deploy to Tomcat**:
-   Copy `target/taskmanager-webapp.war` to your Tomcat `webapps` directory
+#### Step 4: Deployment Coordination
+```
+Jenkins Master → Ansible VM (192.168.56.210):
+SSH Connection: /var/lib/jenkins/keys/id_rsa
+Commands Executed:
+- rm -rf /home/vagrant/java (clean workspace)
+- git clone --single-branch --branch jenkins <repo>
+- source /home/vagrant/myenv/bin/activate
+- cd ansible && ansible-playbook playbook.yaml
+```
 
-5. **Start Tomcat** and access the application
+#### Step 5: Ansible-to-Production Communication
+```
+Ansible VM (192.168.56.210) → Production VM:
+Inventory Target: Production VM IP/hostname
+Authentication: SSH key-based authentication
+Playbook Execution:
+- 01_setup.yaml: Environment preparation
+- 02_configs.yaml: Configuration management
+- 03_deploy.yaml: Docker Compose execution
+- 04_cleanup.yaml: Resource optimization
+```
+
+#### Step 6: Container Orchestration
+```
+Production VM Docker Engine:
+1. Pull Image: docker pull deependrabhatta/java_app:${BUILD_NUMBER}
+2. Environment Setup: Export DATABASE_URL, credentials
+3. Compose Execution: docker-compose up -d
+4. Health Verification: Wait for MySQL health check
+5. Application Start: Tomcat serves on port 8080
+```
+
+#### Step 7: Service Availability
+```
+Production VM:8080 → End Users
+- MySQL Database: localhost:3306 (internal network)
+- Web Application: Production VM IP:8080 (external access)
+- Health Monitoring: Docker health checks every 10 seconds
+- Log Aggregation: Container logs available via docker logs
+```
 
 ## 🗄️ Database Schema
 
-The application uses the following MySQL tables:
+The application uses MySQL with three main tables:
 
 - **users**: User accounts and authentication
-- **tasks**: Task information (titles, descriptions, due dates, priorities)
-- **categories**: Task categories with custom names and colors
+- **tasks**: Task information with priorities and due dates
+- **categories**: Customizable task categories with colors
 
 ## 🛡️ API Endpoints
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | GET | `/` | Home page |
-| GET | `/login` | Login form |
-| POST | `/login` | Authenticate user |
-| GET | `/register` | Registration form |
-| POST | `/register` | Create new user |
+| GET/POST | `/login` | User authentication |
+| GET/POST | `/register` | User registration |
 | GET | `/dashboard` | User dashboard |
-| GET | `/tasks` | List all tasks |
-| POST | `/tasks` | Create/update task |
-| GET | `/profile` | User profile |
-| POST | `/profile` | Update user password |
-| GET | `/logout` | Logout user |
-| POST | `/categories` | Create new category |
+| GET/POST | `/tasks` | Task management |
+| GET/POST | `/profile` | User profile management |
+| POST | `/categories` | Category creation |
+| GET | `/logout` | User logout |
 
-## 🎨 Customization
 
-### Adding New Features
-
-1. Create a new Servlet in `src/main/java/com/example/taskmanager/controller/`
-2. Add the servlet mapping to `web.xml`
-3. Create a JSP view in `src/main/webapp/WEB-INF/views/`
-4. Update the navigation in the sidebar component
-
-### Styling
-
-The application uses CSS custom properties for easy theming. Modify the `:root` variables in `src/main/webapp/css/style.css`:
-
-```css
-:root {
-  --primary: #4361ee;
-  --secondary: #7209b7;
-  --success: #06d6a0;
-  --warning: #ffd60a;
-  --danger: #ef476f;
-  /* Add your custom colors */
-}
-```
-
-## 🐛 Troubleshooting
-
-### Common Issues
-
-#### 1. 404 Errors / Servlet Not Found
-**Symptoms**: Application loads but pages show 404 errors
-
-**Solution**: Check Servlet API compatibility (see Servlet API section above)
-
-#### 2. Database Connection Errors
-**Symptoms**: Application starts but can't access data
-
-**Troubleshooting steps**:
-```bash
-# Check if MySQL container is running
-docker ps
-
-# View database logs
-docker-compose logs db
-
-# Verify database credentials in docker-compose.yml
-```
-
-#### 3. Application Won't Start
-**Symptoms**: Container fails to start or crashes
-
-**Troubleshooting steps**:
-```bash
-# Check application logs
-docker-compose logs app
-
-# Verify Maven build succeeded
-mvn clean package -X
-```
-
-#### 4. Static Resources Not Loading
-**Symptoms**: CSS/JS files return 404
-
-**Solutions**:
-- Clear browser cache
-- Check file paths in JSP pages
-- Verify resource mapping in `web.xml`
-
-### Viewing Logs
-
-```bash
-# Application logs
-docker-compose logs app
-
-# Database logs
-docker-compose logs db
-
-# All services
-docker-compose logs
-```
-
-## 🔧 Development Tips
-
-1. **Hot Reload**: For development, mount your source directory as a volume
-2. **Database GUI**: Consider using Adminer or phpMyAdmin for database management
-3. **IDE Setup**: Import as Maven project in IntelliJ IDEA or Eclipse
-4. **Debugging**: Use remote debugging by exposing port 8000 in Docker
-
-## 📝 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature-name`
-3. Commit your changes: `git commit -am 'Add feature'`
-4. Push to the branch: `git push origin feature-name`
-5. Submit a pull request
-
-## 📧 Support
-
-If you encounter any issues or have questions:
-
-1. Check the troubleshooting section above
-2. Search existing issues in the GitHub repository
-3. Open a new issue with detailed information about your problem
-
-## 🙏 Acknowledgments
-
-- Apache Tomcat community for excellent documentation
-- MySQL team for reliable database engine
-- Docker community for containerization best practices
-
----
-
-**Note**: This README is regularly updated. Please check for the latest version before starting development.
+**Note**: This application uses automated CI/CD deployment. Ensure proper VM configuration and network connectivity between Jenkins, Ansible, and production environments.
